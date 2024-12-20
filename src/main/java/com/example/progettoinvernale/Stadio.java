@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 public class Stadio extends Thread{
     public static Random r = new Random(1-6-5-10-2-7-3-8-4-9);
     public static Biglietti biglietti = new Biglietti();
-    public static PostiASedere[] posti;
+    public static PostiASedere[] posti = new PostiASedere[41507];
     public boolean cassa;
     public String name;
     public void set(boolean c, String n){
@@ -37,7 +37,7 @@ public class Stadio extends Thread{
     }
     public void entraNelloStadio(){
         try{
-            TimeUnit.SECONDS.sleep(r.nextDouble(2));
+            TimeUnit.SECONDS.sleep((long) r.nextDouble(2));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
