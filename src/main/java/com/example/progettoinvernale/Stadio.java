@@ -7,22 +7,27 @@ public class Stadio extends Thread{
     public static PostiASedere[] posti = new PostiASedere[41507];
     public boolean cassa;
     public String name;
-    public void set(boolean c, String n){
+    public String nomeCassa;
+    public static int bigliettiDisponibili;
+    public int tempNum;
+    public static int postiOccupati=0;
+    public void set(boolean c, String n, String nC){
         cassa=c;
         name=n;
-    }
-    public static void main(String[]args){
+        nomeCassa=nC;
         for(int i=0;i<biglietti.capacitaStadium;i++){
             posti[i] = new PostiASedere(biglietti.getBiglietto(i).codice);
         }
+    }
+    public static void main(String[]args){
         Stadio ingressoNord = new Stadio();
         Stadio ingressoSud = new Stadio();
         Stadio ingressoEst = new Stadio();
         Stadio ingressoOvest = new Stadio();
-        ingressoNord.set(true, "nord");
-        ingressoSud.set(true, "sud");
-        ingressoOvest.set(false, "ovest");
-        ingressoEst.set(false, "est");
+        ingressoNord.set(true, "nord", "cassa nord");
+        ingressoSud.set(true, "sud", "cassa sud");
+        ingressoOvest.set(false, "ovest", "");
+        ingressoEst.set(false, "est", "");
         ingressoNord.start();
         ingressoSud.start();
         ingressoEst.start();
@@ -32,28 +37,33 @@ public class Stadio extends Thread{
         do {
             if (cassa)
                 compraBiglietto();
-            entraNelloStadio();
+                entraNelloStadio();
         }while(biglietti.bigliettiComprati!=biglietti.capacitaStadium);
     }
     public void entraNelloStadio(){
         try{
-            TimeUnit.SECONDS.sleep((long) r.nextDouble(2));
+            TimeUnit.SECONDS.sleep((long) r.nextDouble(1));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         synchronized (posti){
-            if(!posti[r.nextInt(biglietti.bigliettiComprati)].occupato){
-
+            tempNum=r.nextInt(biglietti.bigliettiComprati);
+            if(!posti[tempNum].occupato){
+                System.out.println("Un tifoso si è appena seduto al suo posto");
+                postiOccupati++;
             }
+            posti[tempNum].setOccupato(true);
         }
     }
     public void compraBiglietto(){
         try{
-            TimeUnit.SECONDS.sleep(r.nextInt(5));
+            TimeUnit.SECONDS.sleep(r.nextInt(3));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
         biglietti.compraBiglietto();
-        System.out.println("Un tifoso ha appena acquistato un biglietto");
+        System.out.println("Un tifoso ha appena acquistato un biglietto alla "+nomeCassa);
+        System.out.println("I biglietti disponibili per l'acquisto sono: "+biglietti.getBigliettiDisponibili());
     }
 }

@@ -30,4 +30,10 @@ public class Biglietti {
         bigliettiComprati++;
         return c;
     }
+    public int getBigliettiDisponibili(){
+        return capacitaStadium-bigliettiComprati;
+    }
+    public int getBigliettiComprati(){
+        return bigliettiComprati;
+    }
 }
